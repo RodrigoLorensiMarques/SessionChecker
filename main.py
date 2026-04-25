@@ -2,7 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 from datetime import datetime
+import time
 
 
 date_today = datetime.now()
@@ -19,20 +21,29 @@ search_input = WebDriverWait(driver, 10).until(
 )
 
 search_input.send_keys("Tramandai")
+time.sleep(2)
+search_input.send_keys(Keys.RETURN)
 
 
-print(driver.page_source)
+WebDriverWait(driver, 15).until(
+    EC.presence_of_element_located((By.XPATH, "//section[contains(@class,'grid')]//div[contains(@class,'rounded-2xl')]"))
+)
+time.sleep(2)
 
-today_element = driver.find_elements( By.XPATH,f"//span[contains(normalize-space(.), '{date_today_ptbr}')]"
+today_element = driver.find_elements( By.XPATH,f"//section[contains(@class,'grid')]//span[starts-with(normalize-space(.), '{date_today_ptbr}')]"
 )
 
 
 if today_element:
-    print("Veja as sessoes de hoje no SurfMappers")
+    print(f"Veja as sessoes de hoje ({date_today_ptbr}) no SurfMappers")
 
-
-else:
-    print("Nada de fotos por hoje!")
+    for el in today_element:
+        try:
+            card = el.find_element(By.XPATH, "./ancestor::div[contains(@class,'rounded-2xl')]")
+            beach = card.find_element(By.TAG_NAME, "h3").text
+            print(f"   {beach} — {el.text}")
+        except:
+            print(f"   {el.text}")
 
 
 
