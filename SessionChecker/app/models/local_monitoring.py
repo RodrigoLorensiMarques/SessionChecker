@@ -9,7 +9,7 @@ class LocalMonitoring(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    local_monitoring = Column(String, nullable=False)
+    name_local = Column(String, nullable=False)
 
 
 
