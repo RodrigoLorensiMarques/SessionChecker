@@ -15,6 +15,7 @@ def create_user(
 ):
     
     try:
+
         local_monitoring = LocalMonitoring(name_local=name_local)
         db.add(local_monitoring)
         db.commit()
