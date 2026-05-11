@@ -40,6 +40,29 @@ def create_user(
         return { 500, "01X35 - Ocorreu um erro interno ao processar sua solicitação"}
     
 
+@router.delete("/")
+def remove_user(email: str, db:Session):
+    
+    try:
+        db_user=  db.query(User).filter(User.email == email).first()
+
+        if db_user:
+             db.delete(db_user)
+             db.commit()
+
+             message = f"Endereço {db_user.email} removido com sucesso!"
+    
+        else:
+             message = "Usuário não localizado"
+
+        return {"message": message}
+
+
+
+    except:
+            return { 500, "01X35 - Ocorreu um erro interno ao processar sua solicitação"}
+    
+
 
 
 
