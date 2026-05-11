@@ -4,26 +4,23 @@ from email.mime.text import MIMEText
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+def send_email(to_email, text_email, subject_email):
+    load_dotenv()
 
 
-text_email =   'Confira as novas fotos em...'
+    from_email = os.getenv("EMAIL_USER")
+    code = os.getenv("PASSWORD_USER")
 
-from_mail = os.getenv("EMAIL_USER")
-code = os.getenv("PASSWORD_USER")
-to_mail = 'rodrigolorensimarques@protonmail.com'
+    message = MIMEMultipart()
+    message['From'] = from_email
+    message['To'] = to_email
+    message['Subject'] = subject_email  
 
+    message.attach(MIMEText(text_email, 'plain'))
 
-message = MIMEMultipart()
-message['From'] = from_mail
-message['To'] = to_mail
-message['Subject'] = 'Novas fotos'   
-
-message.attach(MIMEText(text_email, 'plain'))
-
-session = smtplib.SMTP('smtp.gmail.com', 587)  
-session.starttls()  
-session.login(from_mail, code)
-text = message.as_string()
-session.sendmail(from_mail, to_mail, text)
-session.quit()
+    session = smtplib.SMTP('smtp.gmail.com', 587)  
+    session.starttls()  
+    session.login(from_email, code)
+    text = message.as_string()
+    session.sendmail(from_email, to_email, text)
+    session.quit()
